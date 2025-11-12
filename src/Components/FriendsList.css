@@ -1,0 +1,89 @@
+/* ... existing code ... */
+
+.friend-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.friend-link {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+  position: relative;
+}
+
+.friend-link:hover {
+  background-color: #f5f5f5;
+}
+
+.friend-link.active {
+  background-color: #e3f2fd;
+}
+
+.friend-avatar {
+  position: relative;
+  margin-left: 12px;
+}
+
+.friend-avatar img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.unread-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #ff4444;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.unread-indicator {
+  width: 8px;
+  height: 8px;
+  background-color: #ff4444;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.delete-friend-btn {
+  background: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.friend-item:hover .delete-friend-btn {
+  opacity: 1;
+}
+
+.delete-friend-btn:hover {
+  background: #cc0000;
+}
+
+/* ... existing code ... */

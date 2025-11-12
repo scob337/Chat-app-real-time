@@ -1,0 +1,211 @@
+{
+  "info": {
+    "name": "Chat App API Collection",
+    "description": "API documentation for Real-time Chat Application",
+    "version": "1.0.0"
+  },
+  "endpoints": {
+    "auth": {
+      "register": {
+        "url": "/api/auth/register",
+        "method": "POST",
+        "description": "تسجيل مستخدم جديد",
+        "body": {
+          "name": "string - اسم المستخدم",
+          "phone": "string - رقم الهاتف (unique)",
+          "password": "string - كلمة المرور"
+        },
+        "response": {
+          "success": {
+            "status": 200,
+            "body": {
+              "message": "User registered",
+              "user": {
+                "id": "string - معرف المستخدم",
+                "name": "string - اسم المستخدم",
+                "phone": "string - رقم الهاتف"
+              },
+              "tokens": {
+                "accessToken": "string - توكن الوصول",
+                "refreshToken": "string - توكن التحديث"
+              }
+            }
+          },
+          "error": {
+            "status": 400,
+            "body": {
+              "message": "Phone already registered/Missing fields"
+            }
+          }
+        }
+      },
+      "login": {
+        "url": "/api/auth/login",
+        "method": "POST",
+        "description": "تسجيل دخول مستخدم",
+        "body": {
+          "phone": "string - رقم الهاتف",
+          "password": "string - كلمة المرور"
+        },
+        "response": {
+          "success": {
+            "status": 200,
+            "body": {
+              "message": "Logged in",
+              "tokens": {
+                "accessToken": "string",
+                "refreshToken": "string"
+              },
+              "user": {
+                "id": "string",
+                "name": "string",
+                "phone": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "chat": {
+      "getMessages": {
+        "url": "/api/chat/:chatId",
+        "method": "GET",
+        "description": "جلب رسائل محادثة معينة (فردية أو جماعية)",
+        "headers": {
+          "Authorization": "Bearer {accessToken}"
+        },
+        "params": {
+          "chatId": "string - معرف المحادثة/المجموعة",
+          "type": "string - نوع المحادثة (direct/group)"
+        },
+        "response": {
+          "success": {
+            "status": 200,
+            "body": {
+              "chatInfo": {
+                "name": "string - اسم المستخدم/المجموعة",
+                "description": "string - وصف المجموعة (للمجموعات فقط)",
+                "members": "array - قائمة الأعضاء (للمجموعات)",
+                "admins": "array - قائمة المشرفين (للمجموعات)"
+              },
+              "messages": "array - قائمة الرسائل",
+              "type": "string - نوع المحادثة",
+              "totalMessages": "number - عدد الرسائل"
+            }
+          }
+        }
+      },
+      "getAllChats": {
+        "url": "/api/chat/list/all",
+        "method": "GET",
+        "description": "جلب قائمة كل المحادثات للمستخدم",
+        "headers": {
+          "Authorization": "Bearer {accessToken}"
+        },
+        "response": {
+          "success": {
+            "status": 200,
+            "body": {
+              "direct": [
+                {
+                  "_id": "string - معرف المحادثة",
+                  "type": "direct",
+                  "lastMessage": "object - آخر رسالة",
+                  "user": "object - معلومات المستخدم الآخر"
+                }
+              ],
+              "groups": [
+                {
+                  "_id": "string - معرف المجموعة",
+                  "type": "group",
+                  "name": "string - اسم المجموعة",
+                  "description": "string - وصف المجموعة",
+                  "members": "array - الأعضاء",
+                  "admins": "array - المشرفين",
+                  "lastMessage": "object - آخر رسالة"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "groups": {
+      "create": {
+        "url": "/api/groups",
+        "method": "POST",
+        "description": "إنشاء مجموعة جديدة",
+        "headers": {
+          "Authorization": "Bearer {accessToken}"
+        },
+        "body": {
+          "name": "string - اسم المجموعة",
+          "description": "string - وصف المجموعة",
+          "members": "array - قائمة معرفات الأعضاء"
+        }
+      },
+      "addMember": {
+        "url": "/api/groups/:groupId/members",
+        "method": "POST",
+        "description": "إضافة عضو للمجموعة",
+        "headers": {
+          "Authorization": "Bearer {accessToken}"
+        },
+        "body": {
+          "userId": "string - معرف المستخدم"
+        }
+      }
+    },
+    "messages": {
+      "send": {
+        "url": "/api/messages",
+        "method": "POST",
+        "description": "إرسال رسالة جديدة",
+        "headers": {
+          "Authorization": "Bearer {accessToken}"
+        },
+        "body": {
+          "content": "string - محتوى الرسالة",
+          "type": "string - نوع الرسالة (text/image/file)",
+          "receiver": "string - معرف المستلم (للمحادثات الفردية)",
+          "group": "string - معرف المجموعة (للمجموعات)"
+        }
+      },
+      "delete": {
+        "url": "/api/messages/:messageId",
+        "method": "DELETE",
+        "description": "حذف رسالة",
+        "headers": {
+          "Authorization": "Bearer {accessToken}"
+        }
+      }
+    }
+  },
+  "models": {
+    "User": {
+      "name": "string - اسم المستخدم",
+      "phone": "string - رقم الهاتف (unique)",
+      "passwordHash": "string - كلمة المرور المشفرة",
+      "lastSeen": "date - آخر ظهور",
+      "groups": "array - قائمة المجموعات"
+    },
+    "Group": {
+      "name": "string - اسم المجموعة",
+      "description": "string - وصف المجموعة",
+      "image": "string - رابط صورة المجموعة",
+      "members": "array - قائمة الأعضاء",
+      "admins": "array - قائمة المشرفين",
+      "createdBy": "string - معرف المنشئ",
+      "lastMessage": "object - آخر رسالة"
+    },
+    "Message": {
+      "content": "string - محتوى الرسالة",
+      "sender": "string - معرف المرسل",
+      "receiver": "string - معرف المستلم (اختياري)",
+      "group": "string - معرف المجموعة (اختياري)",
+      "type": "string - نوع الرسالة",
+      "readBy": "array - قائمة من قرأ الرسالة",
+      "createdAt": "date - تاريخ الإنشاء"
+    }
+  }
+}
